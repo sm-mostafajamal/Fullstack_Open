@@ -28,6 +28,7 @@ const App = () => {
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
 const Display = ({statistics}) =>{
+  const total = statistics.good + statistics.neutral + statistics.bad
   if(statistics.good > 0 || statistics.neutral > 0 || statistics.bad > 0){
     return (
       <div>
@@ -35,6 +36,9 @@ const Display = ({statistics}) =>{
         <div>good {statistics.good}</div> 
         <div>neutral {statistics.neutral}</div> 
         <div>bad {statistics.bad}</div> 
+        <div>all {total}</div> 
+        <div>average {(statistics.good - statistics.bad)/total}</div> 
+        <div>positive {(statistics.good*100)/total} %</div> 
       </div>
     )
   }
