@@ -1,5 +1,27 @@
 import { useState } from 'react'
 
+// Button Component
+const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+// Statistics Component
+const Statistics = ({statistics}) =>{
+  const total = statistics.good + statistics.neutral + statistics.bad
+  if(statistics.good > 0 || statistics.neutral > 0 || statistics.bad > 0){
+    return (
+      <div>
+        <h1>statistics</h1>
+        <div>good {statistics.good}</div> 
+        <div>neutral {statistics.neutral}</div> 
+        <div>bad {statistics.bad}</div> 
+        <div>all {total}</div> 
+        <div>average {(statistics.good - statistics.bad)/total}</div> 
+        <div>positive {(statistics.good*100)/total} %</div> 
+      </div>
+    )
+  }
+}
+
+
+// App Component
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -18,31 +40,13 @@ const App = () => {
       <Button onClick = {increaseByOne(setGood, good)} text = 'good' />
       <Button onClick = {increaseByOne(setNeutral, neutral)} text = 'neutral' />
       <Button onClick = {increaseByOne(setBad, bad)} text = 'bad' />
-      <Display statistics={statistics} />
+      <Statistics statistics={statistics} />
     </div>
   )
 }
 
 
 
-const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-
-const Display = ({statistics}) =>{
-  const total = statistics.good + statistics.neutral + statistics.bad
-  if(statistics.good > 0 || statistics.neutral > 0 || statistics.bad > 0){
-    return (
-      <div>
-        <h1>statistics</h1>
-        <div>good {statistics.good}</div> 
-        <div>neutral {statistics.neutral}</div> 
-        <div>bad {statistics.bad}</div> 
-        <div>all {total}</div> 
-        <div>average {(statistics.good - statistics.bad)/total}</div> 
-        <div>positive {(statistics.good*100)/total} %</div> 
-      </div>
-    )
-  }
-}
 
 
 
