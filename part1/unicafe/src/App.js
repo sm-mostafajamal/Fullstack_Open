@@ -8,12 +8,12 @@ const Statistics = ({statistics}) =>{
   if(statistics.good > 0 || statistics.neutral > 0 || statistics.bad > 0){
     return (
       <div>
-        <div>good {statistics.good}</div> 
-        <div>neutral {statistics.neutral}</div> 
-        <div>bad {statistics.bad}</div> 
-        <div>all {total}</div> 
-        <div>average {(statistics.good - statistics.bad)/total}</div> 
-        <div>positive {(statistics.good*100)/total} %</div> 
+        <StatisticLine text="good" value ={statistics.good} />
+        <StatisticLine text="neutral" value ={statistics.neutral} />
+        <StatisticLine text="bad" value ={statistics.bad} />
+        <StatisticLine text="all" value ={total} />
+        <StatisticLine text="average" value ={(statistics.good - statistics.bad)/total} />
+        <StatisticLine text="positive" value = {`${(statistics.good*100)/total} %`} /> 
       </div>
     )
   }else{
@@ -22,6 +22,13 @@ const Statistics = ({statistics}) =>{
     )
   }
 }
+// StatisticLine Component
+const StatisticLine = ({text, value}) =>{
+  return <div> {text} {value} </div>
+}
+
+
+
 
 
 // App Component
