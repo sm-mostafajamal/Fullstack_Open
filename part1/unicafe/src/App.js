@@ -7,25 +7,27 @@ const Statistics = ({statistics}) =>{
   const total = statistics.good + statistics.neutral + statistics.bad
   if(statistics.good > 0 || statistics.neutral > 0 || statistics.bad > 0){
     return (
-      <div>
-        <StatisticLine text="good" value ={statistics.good} />
-        <StatisticLine text="neutral" value ={statistics.neutral} />
-        <StatisticLine text="bad" value ={statistics.bad} />
-        <StatisticLine text="all" value ={total} />
-        <StatisticLine text="average" value ={(statistics.good - statistics.bad)/total} />
-        <StatisticLine text="positive" value = {`${(statistics.good*100)/total} %`} /> 
-      </div>
+        <table>
+          <tbody>
+              <StatisticLine text="good" value ={statistics.good} />
+              <StatisticLine text="neutral" value ={statistics.neutral} />
+              <StatisticLine text="bad" value ={statistics.bad} />
+              <StatisticLine text="all" value ={total} />
+              <StatisticLine text="average" value ={(statistics.good - statistics.bad)/total} />
+              <StatisticLine text="positive" value = {`${(statistics.good*100)/total} %`} /> 
+          </tbody>
+        </table>
     )
-  }else{
-    return(
-       <div>No feedback given</div>
-    )
-  }
+  }else return <div>No feedback given</div>
+   
 }
 // StatisticLine Component
 const StatisticLine = ({text, value}) =>{
-  return <div> {text} {value} </div>
-}
+  return (<tr>
+            <td>{text}</td> 
+            <td>{value}</td>
+        </tr>)
+  }
 
 
 
