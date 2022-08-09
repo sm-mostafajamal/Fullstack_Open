@@ -1,5 +1,8 @@
-const App = () => {
+import {useState} from 'react';
 
+const App = () => {
+  const [counter, setCounter] = useState(6)
+  console.log(setCounter)
   const course = {
     name: 'Half Stack application development',
     parts: [
