@@ -2,9 +2,11 @@ import { useState } from 'react'
 
 // Button Component
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+
 // Statistics Component
 const Statistics = ({statistics}) =>{
   const total = statistics.good + statistics.neutral + statistics.bad
+
   if(statistics.good > 0 || statistics.neutral > 0 || statistics.bad > 0){
     return (
         <table>
@@ -18,9 +20,10 @@ const Statistics = ({statistics}) =>{
           </tbody>
         </table>
     )
-  }else return <div>No feedback given</div>
-   
+  }
+  else return <div>No feedback given</div>
 }
+
 // StatisticLine Component
 const StatisticLine = ({text, value}) =>{
   return (<tr>
@@ -28,9 +31,6 @@ const StatisticLine = ({text, value}) =>{
             <td>{value}</td>
         </tr>)
   }
-
-
-
 
 
 // App Component
@@ -57,10 +57,6 @@ const App = () => {
     </div>
   )
 }
-
-
-
-
 
 
 export default App
