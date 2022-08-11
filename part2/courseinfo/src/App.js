@@ -11,6 +11,7 @@ function Content ({parts}){
           <Part part={parts[0]} />
           <Part part={parts[1]} />
           <Part part={parts[2]} />
+          <Part part={parts[3]} />
       </div>
   )
 }
@@ -22,20 +23,20 @@ function Part({part}){
       </div>
   )
 }
-// function Total({total}){
-//   return(
-//       <div>
-//          <p>Number of exercises {total}</p>
-//       </div>
-//   )
-// }
+function Total({total}){
+  return(
+      <strong>
+         <p>total of {total} exercises</p>
+      </strong>
+  )
+}
 
 const Course = ({course}) => {
   return (
     <div>
       <Header course = {course.name} />
       <Content parts={course.parts} />
-      {/* <Total total={course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises} /> */}
+      <Total total={course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises+ course.parts[3].exercises} />
     </div>
   )
 }
@@ -60,6 +61,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
