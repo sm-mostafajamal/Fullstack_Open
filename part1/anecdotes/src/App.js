@@ -3,13 +3,14 @@ import { useState } from 'react'
 //  Button Component
 const Button = ({onClick,text}) => <button onClick={onClick}>{text}</button>
 
-const Anecdotes = ({quote, displayVote}) => {
+const Anecdote = ({heading, quote, displayPoints}) => {
   return <div>
+    <h1>{heading}</h1>
     <div>{quote}</div>
-    <div>has {displayVote} votes</div>
-
+    <div>has {displayPoints} votes</div>
   </div>
 }
+
 // App Component
 const App = () => {
   const anecdotes = [
@@ -21,21 +22,30 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ]
-   
-  const [selected, setSelected] = useState(0)
-  const [vote, setVote] = useState(Array(anecdotes.length).fill(0))
 
+  
+  const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
+  
+  const maxVal = (arr) =>{
+    let max = arr[0]
+    arr.filter(el => el > max ? max = el : max )
+    return max
+  }
   const handleClick = () => setSelected(Math.floor(Math.random()*anecdotes.length))
-  const updateVote = [...vote].map((el, index)=> index==selected ?  el=el+=1 : el)
+  const updatePoints = [...points]
+  updatePoints[selected] +=1
+  const maxVoteNum =maxVal(points)
+  const quote = anecdotes[points.indexOf(maxVoteNum)]
   
 
 
   return (
       <div>
-        <Anecdotes quote={anecdotes[selected]} displayVote={vote[selected]} />
-        <Button onClick={() => setVote(updateVote)} text='vote' />
+        <Anecdote heading='Anecdote of the day' quote={anecdotes[selected]} displayPoints={points[selected]} />
+        <Button onClick={() => setPoints(updatePoints)} text='vote' />
         <Button onClick={handleClick} text='next anecdote' />
-
+        <Anecdote heading='Anecdote with most votes' quote={quote} displayPoints={`${maxVoteNum}`} />
       </div>
     )
 }
