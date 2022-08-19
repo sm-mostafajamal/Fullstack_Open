@@ -5,11 +5,18 @@ const App = () => {
     { name: 'Arto Hellas' }
   ]) 
   const [newName, setNewName] = useState('')
+
   const addContact =(e)=> {
     e.preventDefault()
-    setPersons(persons.concat({name: newName}))
-    setNewName('')
+
+      if(persons.find(person => person.name === newName.trim())){
+        alert(`${newName} is already added to phonebook`)
+      }else {
+        setPersons(persons.concat({name: newName}))
+        setNewName('')
+      }
   }
+
   return (
     <div>
       <h2>Phonebook</h2>
