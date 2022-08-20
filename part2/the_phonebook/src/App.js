@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import Filter from './Components/Filter';
+import PersonForm from './Components/PersonForm';
+import Persons from './Components/Persons';
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -22,9 +26,7 @@ const App = () => {
       setNumber('')
     }
   }
-  const personName  = persons.filter(person => { 
-    if((person.name.toLowerCase()).includes(showAll)) return person
-  })
+  const personName  = persons.filter(person => ((person.name.toLowerCase()).includes(showAll.toLowerCase())) && person)
 
   const contactToShow = showAll === '' ? persons : personName
 
@@ -32,26 +34,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with: <input  value={showAll} onChange={(e)=> setShowAll(e.target.value)} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addContact}>
-        <div>
-          name: <input value={newName} onChange={(e)=> setNewName(e.target.value)} />
-        </div>
-        <div>
-          number: <input value={number} onChange={(e)=> setNumber(e.target.value) } />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {contactToShow.map(contact => <div key={contact.id}> {contact.name} {contact.number}</div>)}
 
-      </div>
+      <Filter showAll={showAll} setShowAll = {setShowAll} />
+
+      <h3>add a new</h3>
+
+      <PersonForm newName={newName} number={number} addContact={addContact} setNewName={setNewName} setNumber={setNumber} />
+
+      <h3>Numbers</h3>
+
+      <Persons contactToShow={contactToShow} />
     </div>
   )
 }
