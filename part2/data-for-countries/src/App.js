@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 function App() {
   const [countryInfos, setCountryInfos] = useState([])
   const [search, setSearch] = useState('')
-  // const [countriesToShow, setCountriesToShow] = useState(false)
 
   useEffect(()=>{
     axios
