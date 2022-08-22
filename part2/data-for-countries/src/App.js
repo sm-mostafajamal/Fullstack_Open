@@ -18,22 +18,18 @@ function App() {
   const searchResult = countryInfos.filter(country =>((country.name.common).toLowerCase()).includes(search.toLowerCase()))
   
   
-   const countriesToShow =  searchResult.length === 1 ?
+  const countriesToShow =  searchResult.length === 1 ?
    <div>
       <h1>{searchResult[0].name.common}</h1>
       <div>capital {searchResult[0].capital}</div>
       <div>area {searchResult[0].area}</div>
       <h3>languages:</h3>
       <ul>
-        {Object.keys(searchResult[0].languages).map((lang, id) => <li key={id}>{searchResult[0].languages[lang]}</li>)}
+        {Object.values(searchResult[0].languages).map((lang, id) => <li key={id}>{lang}</li>)}
       </ul>
       <img src={searchResult[0].flags.png} alt={`${searchResult[0].name.common} flag`} />
    </div> 
    : searchResult.map(country => <li key={country.name.common}>{country.name.common}</li>)
-
-   
-  
-  
 
   return (
     <div>
