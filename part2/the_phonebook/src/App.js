@@ -24,9 +24,19 @@ const App = () => {
     if(persons.find(person => person.name === newName.trim())){
       alert(`${newName} is already added to phonebook`)
     }else {
-      setPersons(persons.concat({name: newName, number: number, id: persons.length+1}))
-      setNewName('')
-      setNumber('')
+      const newContact = {
+        name: newName, 
+        number: number, 
+        id: persons.length+1
+      }
+
+      axios
+        .post('http://localhost:3001/persons', newContact)
+        .then(res => {
+          setPersons(persons.concat(res.data))
+          setNewName('')
+          setNumber('')
+        })
     }
   }
   const personName  = persons.filter(person => ((person.name.toLowerCase()).includes(showAll.toLowerCase())) && person)
