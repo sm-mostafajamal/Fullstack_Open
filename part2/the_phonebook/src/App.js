@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Filter from './Components/Filter';
 import PersonForm from './Components/PersonForm';
@@ -11,7 +12,7 @@ const App = () => {
   const [showAll, setShowAll] = useState('')
 
   useEffect(()=> {
-    console.log('effect')
+    
     contactServices
     .getAll()
     .then(initialNotes => setPersons(initialNotes))
@@ -38,7 +39,7 @@ const App = () => {
 
     }
   }
-  
+
   const personName  = persons.filter(person => ((person.name.toLowerCase()).includes(showAll.toLowerCase())) && person)
 
   const contactToShow = showAll === '' ? persons : personName
@@ -56,7 +57,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons contactToShow={contactToShow} />
+      <Persons contactToShow={contactToShow} setPersons={setPersons} />
     </div>
   )
 }
