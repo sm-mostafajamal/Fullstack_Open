@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Filter from './Components/Filter';
 import PersonForm from './Components/PersonForm';
 import Persons from './Components/Persons';
 import contactServices from './services/persons';
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,17 +12,27 @@ const App = () => {
   const [showAll, setShowAll] = useState('')
 
   useEffect(()=> {
-    
     contactServices
     .getAll()
     .then(initialNotes => setPersons(initialNotes))
-
   },[])
   
   const addContact =(e)=> {
     e.preventDefault()
-    if(persons.find(person => person.name === newName.trim())){
-      alert(`${newName} is already added to phonebook`)
+    const searchedContact = persons.find(person => person.name === newName.trim())
+    if(searchedContact){
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with new one`)){
+        const updateContact = {...searchedContact, number: number}
+
+        contactServices
+        .update(searchedContact.id, updateContact)
+        .then(updateContact => {
+          setPersons(persons.map(p => p.id !== searchedContact.id ? p : updateContact))
+          setNewName('')
+          setNumber('')
+        })
+        
+      }
     }else {
 
       const newContact = {
