@@ -1,6 +1,5 @@
 import contactServices from '../services/persons';
 
-
 const Persons =({contactToShow})=>{
 
     const deleteContact =(contact) => window.confirm(`Delete ${contact.name}?`) && contactServices.deleteObj(contact.id)

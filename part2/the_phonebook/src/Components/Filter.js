@@ -1,4 +1,8 @@
-const Filter = ({showAll, setShowAll}) => <div>filter shown with: <input  value={showAll} onChange={(e)=> setShowAll(e.target.value)} /></div>
+const Filter = ({showAll, setShowAll}) =>{ 
+        return <div>
+                    filter shown with: <input  value={showAll} onChange={(e)=> setShowAll(e.target.value)} />
+                </div>
+    }
 
 
 

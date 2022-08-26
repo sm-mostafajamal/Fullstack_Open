@@ -1,12 +1,10 @@
-// import '../index.css'
-
-const Notification =({message})=>{
+const Notification =({message, setClass})=>{
     
     if(message === null){
         return null
     }
 
-    return <div className="addedAndUpdated">
+    return <div className={setClass}>
                 {message}
             </div>  
 }

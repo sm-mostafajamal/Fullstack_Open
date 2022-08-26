@@ -13,6 +13,8 @@ const App = () => {
   const [number, setNumber] = useState('')
   const [showAll, setShowAll] = useState('')
   const [addedMsg, setAddedMsg] = useState(null)
+  const [errMsg, setErrMsg] = useState(null)
+
 
   useEffect(()=> {
     contactServices
@@ -23,6 +25,7 @@ const App = () => {
   const addContact =(e)=> {
     e.preventDefault()
     const searchedContact = persons.find(person => person.name === newName.trim())
+    console.log(searchedContact)
     if(searchedContact){
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with new one`)){
         const updateContact = {...searchedContact, number: number}
@@ -35,6 +38,10 @@ const App = () => {
           setTimeout(()=>setAddedMsg(null), 5000)
           setNewName('')
           setNumber('')
+        }).catch(err=> {
+          setErrMsg(()=> `Information of ${searchedContact.name} has already been removed from server`)
+          setTimeout(()=>setErrMsg(null), 5000)
+          console.error('failed')
         })
         
       }
@@ -67,7 +74,10 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={addedMsg} />
+      <Notification message={addedMsg} setClass={'addedAndUpdated'} />
+      <Notification message={errMsg} setClass={'error'} />
+
+
       <Filter showAll={showAll} setShowAll = {setShowAll} />
 
       <h3>add a new</h3>
@@ -77,7 +87,7 @@ const App = () => {
       
       <h3>Numbers</h3>
 
-      <Persons contactToShow={contactToShow} setPersons={setPersons} />
+      <Persons contactToShow={contactToShow} />
     </div>
   )
 }
