@@ -1,11 +1,10 @@
 import './index.css'
-
 import { useState, useEffect } from 'react';
 import Filter from './Components/Filter';
 import PersonForm from './Components/PersonForm';
 import Persons from './Components/Persons';
-import contactServices from './services/persons';
 import Notification  from './Components/Notification';
+import contactServices from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -29,7 +28,6 @@ const App = () => {
     if(searchedContact){
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with new one`)){
         const updateContact = {...searchedContact, number: number}
-
         contactServices
         .update(searchedContact.id, updateContact)
         .then(updateContact => {
@@ -46,7 +44,6 @@ const App = () => {
         
       }
     }else {
-
       const newContact = {
         name: newName, 
         number: number, 
@@ -60,7 +57,6 @@ const App = () => {
           setNewName('')
           setNumber('')
         })
-
     }
   }
 
@@ -87,7 +83,7 @@ const App = () => {
       
       <h3>Numbers</h3>
 
-      <Persons contactToShow={contactToShow} />
+      <Persons contactToShow={contactToShow} setPersons={setPersons} />
     </div>
   )
 }

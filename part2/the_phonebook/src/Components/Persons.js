@@ -1,8 +1,8 @@
 import contactServices from '../services/persons';
 
-const Persons =({contactToShow})=>{
+const Persons =({contactToShow, setPersons})=>{
 
-    const deleteContact =(contact) => window.confirm(`Delete ${contact.name}?`) && contactServices.deleteObj(contact.id)
+    const deleteContact =(contact) => window.confirm(`Delete ${contact.name}?`) && contactServices.deleteObj(contact.id).then(res => setPersons(contactToShow.filter(p=> p.id !== contact.id)))
 
     return  <div>
                 {contactToShow.map(contact => 
