@@ -61,7 +61,13 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({
       error: 'contact info missing'
     })
-  }else{
+  }
+  else if(persons.find(p=> (p.name).toLowerCase() === ((contactInfo.name).trim()).toLowerCase())){
+    return res.status(400).json({
+      error: 'name must be unique' 
+    })
+  }
+  else{
     persons = persons.concat(newContact)
     res.json(persons)
   }
