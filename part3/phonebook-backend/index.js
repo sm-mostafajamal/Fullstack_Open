@@ -3,7 +3,6 @@ const app = express();
 const morgan = require('morgan')
 const PORT = 3001
 
-app.use(morgan('tiny'))
 
 let  persons = [
     { 
@@ -26,14 +25,19 @@ let  persons = [
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122"
     }
-]
+  ]
 
-
-
+// Middlewares
 app.use(express.json())
+// using morgan custom token
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+morgan.token('body', req => {
+  return JSON.stringify(req.body)
+})
+
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+  res.json(persons)
 })
 
 app.get('/info', (req, res) => {
@@ -41,21 +45,20 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(p => p.id === id)
-    if(person){
-        res.json(person)
+  const id = Number(req.params.id)
+  const person = persons.find(p => p.id === id)
+  if(person){
+    res.json(person)
     }else{
-        res.status(404).end()
+      res.status(404).end()
     }
-})
-
+  })
+  
 app.post('/api/persons', (req, res) => {
   const contactInfo = req.body
-
   const newContact = {
     id : Math.floor(Math.random()*1000000),
-    name: contactInfo.name,
+    name: contactInfo.name.trim(),
     number: contactInfo.number,
     date: new Date()
   }
@@ -64,17 +67,19 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({
       error: 'contact info missing'
     })
-  }
-  else if(persons.find(p=> (p.name).toLowerCase() === ((contactInfo.name).trim()).toLowerCase())){
+  }else if(persons.find(p=> (p.name).toLowerCase() === (newContact.name).toLowerCase())){
     return res.status(409).json({
       error: 'name must be unique' 
     })
-  }
-  else{
+  }else{
     persons = persons.concat(newContact)
     res.json(persons)
   }
 })
+
+
+
+
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
