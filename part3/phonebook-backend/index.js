@@ -25,6 +25,10 @@ let  persons = [
     }
 ]
 
+
+
+app.use(express.json())
+
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
@@ -41,6 +45,26 @@ app.get('/api/persons/:id', (req, res) => {
     }else{
         res.status(404).end()
     }
+})
+
+app.post('/api/persons', (req, res) => {
+  const contactInfo = req.body
+
+  const newContact = {
+    id : Math.floor(Math.random()*1000000),
+    name: contactInfo.name,
+    number: contactInfo.number,
+    date: new Date()
+  }
+
+  if(!contactInfo.name || !contactInfo.number){
+    return res.status(400).json({
+      error: 'contact info missing'
+    })
+  }else{
+    persons = persons.concat(newContact)
+    res.json(persons)
+  }
 })
 
 app.delete('/api/persons/:id', (req, res) => {
