@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan')
+const cors = require('cors')
 const PORT = 3001
 
 
@@ -34,7 +35,8 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 morgan.token('body', req => {
   return JSON.stringify(req.body)
 })
-
+app.use(cors())
+app.use(express.static('build'))
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
@@ -55,7 +57,7 @@ app.get('/api/persons/:id', (req, res) => {
   })
   
 app.post('/api/persons', (req, res) => {
-  const contactInfo = req.body
+  const contactInfo = req.body  
   const newContact = {
     id : Math.floor(Math.random()*1000000),
     name: contactInfo.name.trim(),

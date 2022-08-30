@@ -14,20 +14,23 @@ const App = () => {
   const [addedMsg, setAddedMsg] = useState(null)
   const [errMsg, setErrMsg] = useState(null)
 
-
   useEffect(()=> {
     contactServices
     .getAll()
-    .then(initialNotes => setPersons(initialNotes))
+    .then(initialContact => {
+      setPersons(initialContact)
+    })
   },[])
+  
   
   const addContact =(e)=> {
     e.preventDefault()
     const searchedContact = persons.find(person => person.name === newName.trim())
-    console.log(searchedContact)
+
     if(searchedContact){
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with new one`)){
         const updateContact = {...searchedContact, number: number}
+
         contactServices
         .update(searchedContact.id, updateContact)
         .then(updateContact => {
@@ -43,7 +46,8 @@ const App = () => {
         })
         
       }
-    }else {
+    }
+    else {
       const newContact = {
         name: newName, 
         number: number, 
@@ -51,21 +55,18 @@ const App = () => {
       contactServices
       .create(newContact)
       .then(contactData => {
-          setPersons(persons.concat(contactData))
-          setAddedMsg(()=> `Added ${newContact.name}`)
-          setTimeout(()=>setAddedMsg(null), 5000)
-          setNewName('')
-          setNumber('')
-        })
+        setPersons(contactData)
+        setAddedMsg(()=> `Added ${newContact.name}`)
+        setTimeout(()=>setAddedMsg(null), 5000)
+        setNewName('')
+        setNumber('')
+      })
     }
   }
-
-
   
   const personName  = persons.filter(person => ((person.name.toLowerCase()).includes(showAll.toLowerCase())) && person)
 
   const contactToShow = showAll === '' ? persons : personName
-
   return (
     <div>
       <h2>Phonebook</h2>
