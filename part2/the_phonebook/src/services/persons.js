@@ -25,5 +25,6 @@ const deleteObj = (id) => {
     
 }
 
+const crud = {getAll, create, update, deleteObj}
 
-export default {getAll, create, update, deleteObj}
+export default crud
