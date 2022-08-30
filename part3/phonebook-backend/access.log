@@ -1,2 +1,0 @@
-POST /api/persons 200 300 - 3.185 ms
-POST /api/persons 409 31 - 1.368 ms
