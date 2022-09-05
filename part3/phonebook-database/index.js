@@ -16,6 +16,23 @@ morgan.token('body', req => {
 app.use(cors())
 app.use(express.static('build'))
 
+
+// Error handling
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if(error.name  === 'AxiosError'){
+    return res.status(400).json({
+      error: 'contact info missing'
+    })
+  }
+  next(error)
+}
+
+app.use(errorHandler)
+
+
+
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(person => {
     console.log(person)
@@ -37,39 +54,29 @@ app.get('/api/persons', (req, res) => {
 //     }
 //   })
   
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const contactInfo = req.body  
   if(!contactInfo.name || !contactInfo.number){
-    return res.status(400).json({
-      error: 'contact info missing'
-    })
+    return next(error)
   }
-  // else if(persons.find(p=> (p.name).toLowerCase() === (newContact.name).toLowerCase())){
-    //   return res.status(409).json({
-      //     error: 'name must be unique' 
-      //   })
-      // }
  
-      const contact = new Person({
-        name: contactInfo.name.trim(),
-        number: contactInfo.number,
-        date: new Date()
-      })
-      contact.save().then(savedContact => {
-        Person.find({}).then(person => {
-          res.json(person) 
-          
-        })
-        // console.log(savedContact)
-      }) 
-
+  const contact = new Person({
+    name: contactInfo.name.trim(),
+    number: contactInfo.number,
+    date: new Date()
+  })
+  contact.save().then(savedContact => {
+    Person.find({}).then(person => {
+      res.json(person) 
     })
-    
+  })
 
+  })
+    
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
-    Person.findByIdAndDelete(id).then(person => {
+    Person.findByIdAndRemove(id).then(person => {
       res.status(204).end()
     })
     
