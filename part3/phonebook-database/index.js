@@ -18,47 +18,53 @@ app.use(express.static('build'))
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(person => {
+    console.log(person)
     res.json(person)
   })
 })
 
-app.get('/info', (req, res) => {
-    res.send(`<p>Phonebook has info for ${persons.length} people<p> ${new Date()}`)
-})
+// app.get('/info', (req, res) => {
+//     res.send(`<p>Phonebook has info for ${persons.length} people<p> ${new Date()}`)
+// })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-  if(person){
-    res.json(person)
-    }else{
-      res.status(404).end()
-    }
-  })
+// app.get('/api/persons/:id', (req, res) => {
+//   const id = Number(req.params.id)
+//   const person = persons.find(p => p.id === id)
+//   if(person){
+//     res.json(person)
+//     }else{
+//       res.status(404).end()
+//     }
+//   })
   
 app.post('/api/persons', (req, res) => {
   const contactInfo = req.body  
-  const newContact = {
-    id : Math.floor(Math.random()*1000000),
-    name: contactInfo.name.trim(),
-    number: contactInfo.number,
-    date: new Date()
-  }
-
   if(!contactInfo.name || !contactInfo.number){
     return res.status(400).json({
       error: 'contact info missing'
     })
-  }else if(persons.find(p=> (p.name).toLowerCase() === (newContact.name).toLowerCase())){
-    return res.status(409).json({
-      error: 'name must be unique' 
-    })
-  }else{
-    persons = persons.concat(newContact)
-    res.json(persons)
   }
-})
+  // else if(persons.find(p=> (p.name).toLowerCase() === (newContact.name).toLowerCase())){
+    //   return res.status(409).json({
+      //     error: 'name must be unique' 
+      //   })
+      // }
+ 
+      const contact = new Person({
+        name: contactInfo.name.trim(),
+        number: contactInfo.number,
+        date: new Date()
+      })
+      contact.save().then(savedContact => {
+        Person.find({}).then(person => {
+          res.json(person) 
+          
+        })
+        // console.log(savedContact)
+      }) 
 
+    })
+    
 
 
 app.delete('/api/persons/:id', (req, res) => {

@@ -11,17 +11,20 @@ mongoose
     console.log(err)
 })
 
-const personSchema = mongoose.Schema({
+const personSchema = new mongoose.Schema({
     name: String,
-    number: String
-})
+    number: String,
+    date: Date
+ }, { versionKey: false }
+)
+
 personSchema.set('toJSON', {
-    transform: (document, returnObject) => {
-        returnObject.id =  returnObject._id.toString()
-        delete returnObject._id
-        delete returnObject.__v 
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
     }
-})
+  })
 
 
 
