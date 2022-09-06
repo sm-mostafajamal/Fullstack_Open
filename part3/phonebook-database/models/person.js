@@ -1,3 +1,4 @@
+const validator = require('fly/lib/validator')
 const mongoose = require('mongoose')
 
 
@@ -17,7 +18,27 @@ const personSchema = new mongoose.Schema({
       minLength: 3,
       required: true,
     },
-    number: String,
+    number: {
+      type: String,
+      minLength: 8,
+      validate: { 
+
+        validator: function(num) {
+          if(num.includes('-')) {
+            num = num.trim().split('-')
+            if((num.length <= 2) && 
+            (num[0].length >= 2) && 
+            (num[0].length <= 3)){
+              return num.join('-')
+            }
+            return false
+
+          } 
+        },
+        message: props => `${props.value} is invalid` 
+
+      }
+    },
     date: Date
  }, { versionKey: false }
 )

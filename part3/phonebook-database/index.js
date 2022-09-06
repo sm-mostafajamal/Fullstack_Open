@@ -20,16 +20,16 @@ app.use(express.static('build'))
 const errorHandler = (error, req, res, next) => {
   console.error(error.message)
 
-  if (error.name === 'ValidationError') {    
+  if (error.name === 'ValidationError' || error.name === 'ReferenceError') {    
     return res.status(400).json({ error: error.message }).end()
   }else if(error.name === 'BSONTypeError' || error.name === 'CastError'){
     return res.status(404).json({
       error: 'contact not found'
     }).end()
-  }else if(error.name === 'ReferenceError'){
-    return res.status(400).json({
-      error: error.message
-    }).end()
+  }else if(error.name === 'MongoServerError'){
+    return res.status(409).json({
+      error: 'Conflict: contact already exists'
+    })
   }
   next(error)
 }
