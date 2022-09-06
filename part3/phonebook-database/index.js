@@ -17,19 +17,7 @@ app.use(cors())
 app.use(express.static('build'))
 
 
-// Error handling
-const errorHandler = (error, req, res, next) => {
-  console.error(error.message)
 
-  if(error.name  === 'AxiosError'){
-    return res.status(400).json({
-      error: 'contact info missing'
-    })
-  }
-  next(error)
-}
-
-app.use(errorHandler)
 
 
 
@@ -44,15 +32,16 @@ app.get('/api/persons', (req, res) => {
 //     res.send(`<p>Phonebook has info for ${persons.length} people<p> ${new Date()}`)
 // })
 
-// app.get('/api/persons/:id', (req, res) => {
-//   const id = Number(req.params.id)
-//   const person = persons.find(p => p.id === id)
-//   if(person){
-//     res.json(person)
-//     }else{
-//       res.status(404).end()
-//     }
-//   })
+app.get('/api/persons/:id', (req, res, next) => {
+
+  Person.findById(req.params.id).then(contact => {
+    res.json(contact)
+  }).catch(error => {
+      next(error)
+
+  })
+
+})
   
 app.post('/api/persons', (req, res, next) => {
   const contactInfo = req.body  
@@ -79,6 +68,8 @@ app.put('/api/persons/:id', (req, res) => {
   Person.findByIdAndUpdate(req.params.id, {name, number}, {new: true})
         .then(updateContact => {
           res.json(updateContact)
+        }).catch(error => {
+          next(error)
         })
   
 })
@@ -92,7 +83,30 @@ app.delete('/api/persons/:id', (req, res) => {
     
 })
 
+
+
+
+// Error handling
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if(error.name  === 'AxiosError'){
+    return res.status(400).json({
+      error: 'contact info missing'
+    })
+  }else if(error.name === 'BSONTypeError' || error.name === 'CastError'){
+    return res.status(404).json({
+      error: 'contact not found'
+    }).end()
+  }
+  next(error)
+}
+
+app.use(errorHandler)
+
+
 app.listen(PORT, ()=> {
     console.log(`Server running on port ${PORT}`)
 })
+
 
