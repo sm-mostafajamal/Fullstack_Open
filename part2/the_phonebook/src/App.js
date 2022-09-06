@@ -60,6 +60,10 @@ const App = () => {
         setTimeout(()=>setAddedMsg(null), 5000)
         setNewName('')
         setNumber('')
+      }).catch(error => {
+        setErrMsg(()=> error.response.data.error)
+          setTimeout(()=>setErrMsg(null), 5000)
+          console.log(error.response.data.error)
       })
     }
   }
