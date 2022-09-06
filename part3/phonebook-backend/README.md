@@ -1,1 +1,1 @@
-https://backend-phonebook-api-heroku.herokuapp.com/
+https://fullstack-phonebook-api.herokuapp.com/
