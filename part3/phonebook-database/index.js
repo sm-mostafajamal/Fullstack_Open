@@ -16,14 +16,29 @@ morgan.token('body', req => {
 app.use(cors())
 app.use(express.static('build'))
 
+// Error handling
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
 
+  if (error.name === 'ValidationError') {    
+    return res.status(400).json({ error: error.message }).end()
+  }else if(error.name === 'BSONTypeError' || error.name === 'CastError'){
+    return res.status(404).json({
+      error: 'contact not found'
+    }).end()
+  }else if(error.name === 'ReferenceError'){
+    return res.status(400).json({
+      error: error.message
+    }).end()
+  }
+  next(error)
+}
 
 
 
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(person => {
-    console.log(person)
     res.json(person)
   })
 })
@@ -58,6 +73,8 @@ app.post('/api/persons', (req, res, next) => {
     Person.find({}).then(person => {
       res.json(person) 
     })
+  }).catch(error => {
+    next(error)
   })
 
   })
@@ -65,8 +82,10 @@ app.post('/api/persons', (req, res, next) => {
   
 app.put('/api/persons/:id', (req, res) => {
   const {name, number} = req.body
-  Person.findByIdAndUpdate(req.params.id, {name, number}, {new: true})
-        .then(updateContact => {
+  Person.findByIdAndUpdate(req.params.id, {name, number}, {
+    new: true, 
+    runValidators: true, 
+  }).then(updateContact => {
           res.json(updateContact)
         }).catch(error => {
           next(error)
@@ -84,23 +103,6 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 
-
-
-// Error handling
-const errorHandler = (error, req, res, next) => {
-  console.error(error.message)
-
-  if(error.name  === 'AxiosError'){
-    return res.status(400).json({
-      error: 'contact info missing'
-    })
-  }else if(error.name === 'BSONTypeError' || error.name === 'CastError'){
-    return res.status(404).json({
-      error: 'contact not found'
-    }).end()
-  }
-  next(error)
-}
 
 app.use(errorHandler)
 
