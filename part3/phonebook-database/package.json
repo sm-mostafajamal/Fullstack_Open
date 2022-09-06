@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "lint": "eslint ."
   },
   "author": "sm. mostafa jamal",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "mongoose": "^6.5.4"
   },
   "devDependencies": {
+    "eslint": "^8.23.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.19"
   }

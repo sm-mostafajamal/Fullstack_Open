@@ -1,10 +1,10 @@
 require('dotenv').config()
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 // const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
-const PORT = process.env.PORT 
+const PORT = process.env.PORT
 
 // Middlewares
 app.use(express.json())
@@ -20,7 +20,7 @@ app.use(express.static('build'))
 const errorHandler = (error, req, res, next) => {
   console.error(error.message)
 
-  if (error.name === 'ValidationError' || error.name === 'ReferenceError') {    
+  if (error.name === 'ValidationError' || error.name === 'ReferenceError') {
     return res.status(400).json({ error: error.message }).end()
   }else if(error.name === 'BSONTypeError' || error.name === 'CastError'){
     return res.status(404).json({
@@ -52,54 +52,46 @@ app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id).then(contact => {
     res.json(contact)
   }).catch(error => {
-      next(error)
-
+    next(error)
   })
 
 })
-  
+
 app.post('/api/persons', (req, res, next) => {
-  const contactInfo = req.body  
-  if(!contactInfo.name || !contactInfo.number){
-    return next(error)
-  }
- 
+  const contactInfo = req.body
+
   const contact = new Person({
     name: contactInfo.name.trim(),
     number: contactInfo.number,
     date: new Date()
   })
-  contact.save().then(savedContact => {
+  contact.save().then(() => {
     Person.find({}).then(person => {
-      res.json(person) 
+      res.json(person)
     })
   }).catch(error => {
     next(error)
   })
+})
 
-  })
-
-  
-app.put('/api/persons/:id', (req, res) => {
-  const {name, number} = req.body
-  Person.findByIdAndUpdate(req.params.id, {name, number}, {
-    new: true, 
-    runValidators: true, 
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = req.body
+  Person.findByIdAndUpdate(req.params.id, { name, number }, {
+    new: true,
+    runValidators: true,
   }).then(updateContact => {
-          res.json(updateContact)
-        }).catch(error => {
-          next(error)
-        })
-  
+    res.json(updateContact)
+  }).catch(error => {
+    next(error)
+  })
 })
 
 
 
 app.delete('/api/persons/:id', (req, res) => {
-    Person.findByIdAndRemove(req.params.id).then(person => {
-      res.status(204).end()
-    })
-    
+  Person.findByIdAndRemove(req.params.id).then(() => {
+    res.status(204).end()
+  })
 })
 
 
@@ -107,8 +99,8 @@ app.delete('/api/persons/:id', (req, res) => {
 app.use(errorHandler)
 
 
-app.listen(PORT, ()=> {
-    console.log(`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
 
 
