@@ -4,21 +4,22 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
-    jest: true,
+    jest: true
   },
   extends: [
     'plugin:react/recommended',
-    'airbnb',
+    'airbnb'
   ],
   overrides: [
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
+    ecmaVersion: 'latest'
   },
   plugins: [
-    'react',
+    'react'
   ],
   rules: {
     'prefer-arrow-callback': 'error',
-  },
+    'comma-dangle': ['error', 'never']
+  }
 };
