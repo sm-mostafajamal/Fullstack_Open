@@ -4,6 +4,7 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
+    jest: true,
   },
   extends: [
     'plugin:react/recommended',
@@ -18,5 +19,6 @@ module.exports = {
     'react',
   ],
   rules: {
+    'prefer-arrow-callback': 'error',
   },
 };
