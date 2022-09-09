@@ -6,6 +6,7 @@ const app = express();
 const { info, error } = require('./utils/logger');
 const { MONGODB_URI } = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
+const { errorHandler } = require('./utils/middleware');
 
 info('connecting to', MONGODB_URI);
 
@@ -21,5 +22,6 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use('/api/blogs', blogsRouter);
+app.use(errorHandler);
 
 module.exports = app;

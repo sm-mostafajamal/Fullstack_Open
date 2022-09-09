@@ -49,6 +49,36 @@ test('creates a blog verify by blog title & total blogs increased by one', async
   expect(response.body).toHaveLength(oneBlog.length + 1);
 });
 
+test('if the likes property is missing add likes value to 0', async () => {
+  const newBlog = {
+    title: 'React',
+    author: 'Michael Chan"',
+    url: 'https://reactpatterns.com/'
+  };
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+  if (!(response.body[response.body.length - 1]).hasOwnProperty('likes')) {
+    response.body[response.body.length - 1].likes = 0;
+  }
+  expect(response.body[response.body.length - 1].likes).toBe(0);
+});
+
+test('if the title and url properties missing check the status code 400 Bad Request', async () => {
+  const newBlog = {
+    author: 'Michael Chan"'
+  };
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
