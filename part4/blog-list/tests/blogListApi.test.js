@@ -87,6 +87,16 @@ test('deleteing individual blog post', async () => {
   expect(blogsFromDB).toHaveLength(oneBlog.length);
 });
 
+test('updating likes of an individual blog post', async () => {
+  const blogsFromDB = await Blog.find({});
+  const id = blogsFromDB[blogsFromDB.length - 1].id;
+  await api
+    .put(`/api/blogs/${id}`)
+    .expect(204);
+
+  expect(blogsFromDB).toHaveLength(oneBlog.length);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
