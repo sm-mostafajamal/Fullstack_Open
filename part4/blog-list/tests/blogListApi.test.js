@@ -21,13 +21,12 @@ test('blogs are returned as json with correct amount of blog posts', async () =>
   expect(response.body).toHaveLength(oneBlog.length);
 }, 100000);
 
-test('unique identifier property of the blog posts is named id (not _id)', async () => {
+test('checking blog posts id property is not _id', async () => {
   const response = await api.get('/api/blogs');
-
   expect(response.body[0].id).toBeDefined();
 });
 
-test('creates a blog verify by blog title & total blogs increased by one', async () => {
+test('creates a blog verify by blog title & total blogs increased by one', async () => { 
   const newBlog = {
     title: 'React patterns',
     author: 'Michael Chan"',
@@ -41,12 +40,11 @@ test('creates a blog verify by blog title & total blogs increased by one', async
     .expect(201)
     .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
+  const blogsFromDB = await Blog.find({});
+  const title = blogsFromDB.map((b) => b.title);
 
-  const title = response.body.map((b) => b.title);
   expect(title).toContain('React patterns');
-
-  expect(response.body).toHaveLength(oneBlog.length + 1);
+  expect(blogsFromDB).toHaveLength(oneBlog.length + 1);
 });
 
 test('if the likes property is missing add likes value to 0', async () => {
@@ -61,11 +59,11 @@ test('if the likes property is missing add likes value to 0', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
-  if (!(response.body[response.body.length - 1]).hasOwnProperty('likes')) {
-    response.body[response.body.length - 1].likes = 0;
+  const blogsFromDB = await Blog.find({});
+  if (!(blogsFromDB[blogsFromDB.length - 1]).hasOwnProperty('likes')) {
+    blogsFromDB[blogsFromDB.length - 1].likes = 0;
   }
-  expect(response.body[response.body.length - 1].likes).toBe(0);
+  expect(blogsFromDB[blogsFromDB.length - 1].likes).toBe(0);
 });
 
 test('if the title and url properties missing check the status code 400 Bad Request', async () => {
@@ -77,6 +75,16 @@ test('if the title and url properties missing check the status code 400 Bad Requ
     .send(newBlog)
     .expect(400)
     .expect('Content-Type', /application\/json/);
+});
+
+test('deleteing individual blog post', async () => {
+  const blogsFromDB = await Blog.find({});
+  const id = blogsFromDB[blogsFromDB.length - 1].id;
+  await api
+    .delete(`/api/blogs/${id}`)
+    .expect(204);
+
+  expect(blogsFromDB).toHaveLength(oneBlog.length);
 });
 
 afterAll(() => {
