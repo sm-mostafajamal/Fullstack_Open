@@ -2,9 +2,14 @@ const mongoose = require('mongoose');
 const usersRouter = require('../controllers/users');
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    minLength: 3,
+    required: true
+  },
   name: String,
-  passwordHash: String,
+  passwordHash: String
+  
   // blogs: [
   //   {
   //     type: mongoose.Schema.Types.ObjectId,
