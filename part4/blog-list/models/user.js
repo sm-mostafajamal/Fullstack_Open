@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
-const usersRouter = require('../controllers/users');
 
 const userSchema = new mongoose.Schema({
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    }
+  ],
   username: {
     type: String,
     minLength: 3,
@@ -9,13 +14,6 @@ const userSchema = new mongoose.Schema({
   },
   name: String,
   passwordHash: String
-  
-  // blogs: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: 'Blog'
-  //   }
-  // ]
 })
 
 userSchema.set('toJSON', {
@@ -28,4 +26,5 @@ userSchema.set('toJSON', {
   }
 })
 
+// const User = 
 module.exports = mongoose.model('User', userSchema);

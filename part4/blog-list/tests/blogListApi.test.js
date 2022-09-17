@@ -4,10 +4,9 @@ const bcrypt = require('bcrypt');
 const app = require('../app');
 
 const api = supertest(app);
-const { oneBlog, usersInDB } = require('./helperData');
+const { oneBlog } = require('./helperData');
 const Blog = require('../models/blog');
 const User = require('../models/user');
-
 
 describe('working with Blogs', () => {
   beforeEach(async () => {
