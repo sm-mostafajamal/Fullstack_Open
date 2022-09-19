@@ -9,7 +9,7 @@ blogsRouter.get('/', async (req, res) => {
   //   .then((blogs) => {
   //     res.json(blogs);
   //   });
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
   res.json(blogs);
 });
 
@@ -31,7 +31,7 @@ blogsRouter.post('/', async (req, res, next) => {
       author: body.author,
       user: user._id,
       likes: 0
-    }); 
+    });
 
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);

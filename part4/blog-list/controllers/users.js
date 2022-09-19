@@ -3,7 +3,12 @@ const usersRouter = require('express').Router();
 const User = require('../models/user');
 
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({}).populate('blogs', { url: 1, title: 1, author: 1, id: 1 });
+  const users = await User.find({}).populate('blogs', {
+    url: 1,
+    title: 1,
+    author: 1,
+    id: 1
+  });
   res.status(200).json(users);
 });
 
@@ -14,11 +19,12 @@ usersRouter.post('/', async (req, res, next) => {
 
     if (password === undefined || password.length < 3) {
       return res.status(400).json({
-        'error' : 'Password is too short or password is missing'
+        error: 'Password is too short or password is missing'
       });
-    } else if (userExists) {
+    }
+    if (userExists) {
       return res.status(400).json({
-        'error' : 'username already exists, username must be unique!'
+        error: 'username already exists, username must be unique!'
       });
     }
 
@@ -31,9 +37,9 @@ usersRouter.post('/', async (req, res, next) => {
       passwordHash
     });
     const savedUser = await user.save();
-    res.status(201).json(savedUser);
+    return res.status(201).json(savedUser);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 module.exports = usersRouter;

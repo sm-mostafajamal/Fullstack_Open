@@ -20,6 +20,7 @@ module.exports = {
   ],
   rules: {
     'prefer-arrow-callback': 'error',
-    'comma-dangle': ['error', 'never']
+    'comma-dangle': ['error', 'never'],
+    'eslint-disable': 'no-underscore-dangle'
   }
 };
