@@ -32,13 +32,13 @@ describe('working with Blogs', () => {
     const newBlog = {
       title: 'React patterns',
       author: 'Michael Chan"',
-      url: 'https://reactpatterns.com/',
-      likes: 7
+      url: 'https://reactpatterns.com/'
     };
-
+    const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFwb2xsbyIsImlkIjoiNjMyNWVjMDhjNWZkNTQxMzdhOTZjOTQ2IiwiaWF0IjoxNjYzNjkwMzY0fQ.oTDOXcbz7iMeq3YmlbFf_aTtiyBvuffURyGIdMZLb2Q'
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', token)
       .expect(201)
       .expect('Content-Type', /application\/json/);
 

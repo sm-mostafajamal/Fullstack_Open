@@ -33,7 +33,7 @@ blogsRouter.post('/', async (req, res, next) => {
     userDb.blogs = userDb.blogs.concat(savedBlog._id);
     await userDb.save();
 
-    res.json(savedBlog);
+    res.status(201).json(savedBlog);
   } catch (err) {
     error(next(err));
   }
