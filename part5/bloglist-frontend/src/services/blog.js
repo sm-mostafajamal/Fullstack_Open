@@ -2,6 +2,11 @@
 const axios = require('axios');
 const loginUrl = 'http://localhost:3003/api/login';
 const baseUrl = 'http://localhost:3003/api/blogs';
+let token = null;
+
+const setToken = (newToken) => {
+  token = `bearer ${newToken}`;
+}
 
 const login = async (credentials) => {
   const res = await axios.post(loginUrl, credentials);
@@ -15,5 +20,4 @@ const getAll = async () => {
   return res.data
 }
 
-
-export default { login, getAll };
+export default { login, getAll, setToken };
