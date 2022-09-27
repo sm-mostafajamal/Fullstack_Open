@@ -1,146 +1,179 @@
-const mongoose = require('mongoose');
-const supertest = require('supertest');
-const bcrypt = require('bcrypt');
-const app = require('../app');
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 
-const api = supertest(app);
-const { oneBlog } = require('./helperData');
-const Blog = require('../models/blog');
-const User = require('../models/user');
+const app = require('../app')
+const helper = require('./test_helper')
+const api = supertest(app)
+const Blog = require('../models/blog')
+const User = require('../models/user')
 
-describe('working with Blogs', () => {
+describe('when there are some blogs in database', () => {
   beforeEach(async () => {
-    await Blog.deleteMany({});
-    const newBlog = new Blog(oneBlog[0]);
-    await newBlog.save();
-  });
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
+  })
 
-  test('blogs are returned as json with correct amount of blog posts', async () => {
-    await api.get('/api/blogs')
+  test('those are returned as json', async () => {
+    const response = await api
+      .get('/api/blogs')
       .expect(200)
-      .expect('Content-Type', /application\/json/);
-    const response = await api.get('/api/blogs');
-    expect(response.body).toHaveLength(oneBlog.length);
-  }, 100000);
+      .expect('Content-Type', /application\/json/)
 
-  test('checking blog posts id property is not _id', async () => {
-    const response = await api.get('/api/blogs');
-    expect(response.body[0].id).toBeDefined();
-  });
+      expect(response.body).toHaveLength(helper.initialBlogs.length)
+  })
 
-  test('creates a blog verify by blog title & total blogs increased by one', async () => { 
-    const newBlog = {
-      title: 'React patterns',
-      author: 'Michael Chan"',
-      url: 'https://reactpatterns.com/'
-    };
-    const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFwb2xsbyIsImlkIjoiNjMyNWVjMDhjNWZkNTQxMzdhOTZjOTQ2IiwiaWF0IjoxNjYzNjkwMzY0fQ.oTDOXcbz7iMeq3YmlbFf_aTtiyBvuffURyGIdMZLb2Q'
+  test('those are identified by field id', async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+      expect(response.body[0].id).toBeDefined()
+  })
+
+  test('a blog can be deleted', async () => {
+    const aBlogAtStart = (await helper.blogsInDb())[0]
+
     await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .set('Authorization', token)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
+      .delete(`/api/blogs/${aBlogAtStart.id}`)
+      .expect(204)
 
-    // const blogsFromDB = await Blog.find({});
-    // const title = blogsFromDB.map((b) => b.title);
+      const blogsAtEnd = await helper.blogsInDb()
+      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 
-    // expect(title).toContain('React patterns');
-    // expect(blogsFromDB).toHaveLength(oneBlog.length + 1);
-  });
+      const titles = blogsAtEnd.map(b => b.title)
+      expect(titles).not.toContain(aBlogAtStart.title)
+  })
 
-  test('if the likes property is missing add likes value to 0', async () => {
-    const newBlog = {
-      title: 'React',
-      author: 'Michael Chan"',
-      url: 'https://reactpatterns.com/'
-    };
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
-
-    const blogsFromDB = await Blog.find({});
-    if (!(blogsFromDB[blogsFromDB.length - 1]).hasOwnProperty('likes')) {
-      blogsFromDB[blogsFromDB.length - 1].likes = 0;
+  test('a blog can be edited', async () => {
+    const aBlogAtStart = (await helper.blogsInDb())[0]
+    const editedBlog = {
+      ...aBlogAtStart,
+      likes: 99
     }
-    expect(blogsFromDB[blogsFromDB.length - 1].likes).toBe(0);
-  });
 
-  test('if the title and url properties missing check the status code 400 Bad Request', async () => {
-    const newBlog = {
-      author: 'Michael Chan"'
-    };
     await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(400)
-      .expect('Content-Type', /application\/json/);
-  });
+      .put(`/api/blogs/${aBlogAtStart.id}`)
+      .send(editedBlog)
+      .expect(200)
 
-  test('deleteing individual blog post', async () => {
-    const blogsFromDB = await Blog.find({});
-    const id = blogsFromDB[blogsFromDB.length - 1].id;
-    await api
-      .delete(`/api/blogs/${id}`)
-      .expect(204);
+    const blogsAtEnd = await helper.blogsInDb()
+    const aBlogAtEnd = blogsAtEnd.find(b => b.id === aBlogAtStart.id)
+    expect(aBlogAtEnd.likes).toBe(99)
+  })
 
-    expect(blogsFromDB).toHaveLength(oneBlog.length);
-  });
+  describe('addition of a blog', () => {
+    let token
+    beforeEach(async () => {
+      await User.deleteMany({})
+  
+      const passwordHash = await bcrypt.hash('sekret', 10)
+      const user = new User({ username: 'root', passwordHash })
+  
+      await user.save()
 
-  test('updating likes of an individual blog post', async () => {
-    const blogsFromDB = await Blog.find({});
-    const id = blogsFromDB[blogsFromDB.length - 1].id;
-    await api
-      .put(`/api/blogs/${id}`)
-      .expect(204);
+      const response = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
 
-    expect(blogsFromDB).toHaveLength(oneBlog.length);
-  });
+      token = response.body.token
+    })
 
-  afterAll(() => {
-    mongoose.connection.close();
-  });
-});
+    test('succeeds if content valid', async () => {
+      const newBlog = {
+        title: 'Benefits of Scrumban',
+        author: 'Kalle Ilves',
+        url: 'www.google.com',
+        likes: 7
+      }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Authorization', `bearer ${token}`)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-describe('testing the creation of users', () => {
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).toContain('Benefits of Scrumban')
+    })
 
+    test('fails if title and url missing', async () => {
+      const newBlog = {
+        author: 'Kalle Ilves',
+        likes: 7
+      }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Authorization', `bearer ${token}`)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+    })
+  })
+})
+
+describe('user creation', () => {
   beforeEach(async () => {
-    await User.deleteMany({});
-    const passwordHash = await bcrypt.hash('testing', 10);
-    const root = new User({
-      username: 'root',
-      name: 'root',
-      password: passwordHash
-    });
-    await root.save();
-  });
+    await User.deleteMany({})
 
-  test('valid user creation with valid status code and suitable message', async () => {
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('fails if username is too short', async () => {
     const newUser = {
-      username: 'testing',
-      name: 'test',
-      password: 'test'
-    };
-
+      username: 'mo',
+      pasword: 'sekred'
+    }
+  
     await api
       .post('/api/users')
       .send(newUser)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
-  });
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
 
-  // test('token', async () => {
-  //   const newUser = {
-  //     username: 'new user',
-  //     password: 'test'
-  //   }
-  //   const user = await api
-  //     .post('/api/login')
-  //     .send(newUser)
-  //     .expect(200)
-  //   console.log(user)
-    
-  // })
-});
+  test('fails if password is too short', async () => {
+    const newUser = {
+      username: 'kalle',
+      pasword: 'p'
+    }
+  
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const newUser = {
+      username: 'root',
+      name: 'Superuser',
+      password: 'salainen',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('username must be unique')
+  })
+})
+
+afterAll(() => {
+  mongoose.connection.close()
+})
