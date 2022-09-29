@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import blogServices from './services/blog';
-import Blog from './components/Blog'
+import Blog from './components/Blog';
+import Notification from './components/Notification';
+import './index.css';
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -10,7 +12,7 @@ function App() {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setURL] = useState('');
-
+  const [addedMsg, setAddedMsg] = useState(null);
   
 
   useEffect(() => {
@@ -29,6 +31,7 @@ function App() {
   const loginPage = () => (
     <div>
       <h1>Login to application</h1>
+      <Notification message={addedMsg} setClass={'error'} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -54,23 +57,29 @@ function App() {
   )
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await blogServices.login({username, password})
-    window.localStorage.setItem('loggedUser', JSON.stringify(res))
-    blogServices.setToken(res.token)
-    setUser(res)
-    setUsername('')
-    setPassword('')
+    try {
+      const res = await blogServices.login({username, password})
+      window.localStorage.setItem('loggedUser', JSON.stringify(res))
+      blogServices.setToken(res.token)
+      setUser(res)
+      setUsername('')
+      setPassword('')
+    } catch (error) {
+      setAddedMsg(error.response.data.error)
+      setTimeout(() => setAddedMsg(null), 5000)
+    }
   }
-  const loggedinPage = () => (
+  const loggedInPage = () => {
+    return (
       <div>
         <h1>blogs</h1>
+        <Notification message={addedMsg} setClass={'addedAndUpdated'} />    
         {user.name} logged in
         <button onClick={logout}>logout</button>
         {createBlog()}
         <Blog blogs={blogs} />
-      </div>
-    )
-
+          </div>
+  )}
   const createBlog = () => (
       <form onSubmit={handleCreateBlog}>
         <h1>create new</h1>
@@ -91,6 +100,8 @@ function App() {
     e.preventDefault()
     const res = await blogServices.create({ title, author, url })
     setBlogs(blogs.concat(res))
+    setAddedMsg(`a new blog ${res.title} by ${res.author} added`)
+    setTimeout(() => setAddedMsg(null), 5000)
     setTitle('')
     setAuthor('')
     setURL('')
@@ -102,7 +113,9 @@ function App() {
  
   return (
     <div>
-        {user === null ?  loginPage() : loggedinPage()}
+        {user === null 
+        ? loginPage() 
+        : loggedInPage()}
     </div>
   );
 }
