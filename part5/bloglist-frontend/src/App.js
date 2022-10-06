@@ -13,7 +13,7 @@ function App() {
   const [author, setAuthor] = useState('');
   const [url, setURL] = useState('');
   const [addedMsg, setAddedMsg] = useState(null);
-  
+  const [createBlogVisible, setCreateBlogVisible] = useState(false);
 
   useEffect(() => {
     blogServices.getAll().then(blogs => setBlogs(blogs));
@@ -76,7 +76,8 @@ function App() {
         <Notification message={addedMsg} setClass={'addedAndUpdated'} />    
         {user.name} logged in
         <button onClick={logout}>logout</button>
-        {createBlog()}
+        {createNewBlog()}
+        {/* {createBlog()} */}
         <Blog blogs={blogs} />
           </div>
   )}
@@ -110,7 +111,24 @@ function App() {
     window.localStorage.clear()
     window.location.reload()
   }
- 
+  
+  const createNewBlog = () => {
+    const hideCreateBlog = { display: createBlogVisible ? 'none' : ''}
+    const showCreateBlog = { display: createBlogVisible ? '' : 'none'}
+
+    return (
+      <div>
+        <div style={hideCreateBlog}>
+          <button onClick={() => setCreateBlogVisible(!createBlogVisible)}>create blog</button>
+        </div>
+        <div style={showCreateBlog}>
+          {createBlog()}
+          <button onClick={() => setCreateBlogVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
         {user === null 
