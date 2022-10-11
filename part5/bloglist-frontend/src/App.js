@@ -88,7 +88,7 @@ function App() {
         <Togglable buttonLabel='create new blog' ref={blogRef} >
           <CreateBlogForm createBlog={handleCreateBlog} />
         </Togglable>
-        <Blog blogs={blogs} />
+        <Blog blogs={blogs} user={user} />
       </div>
   )}
 
