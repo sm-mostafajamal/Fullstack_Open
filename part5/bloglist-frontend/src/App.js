@@ -88,7 +88,15 @@ function App() {
         <Togglable buttonLabel='create new blog' ref={blogRef} >
           <CreateBlogForm createBlog={handleCreateBlog} />
         </Togglable>
-        <Blog blogs={blogs} user={user} />
+        {
+          blogs.map(blog => 
+            <Blog 
+              blog={blog} 
+              user={user} 
+              key={blog.id}
+              />
+            )
+        }
       </div>
   )}
 
