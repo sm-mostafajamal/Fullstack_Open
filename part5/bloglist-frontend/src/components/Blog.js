@@ -1,8 +1,9 @@
 import { useState } from "react"
+import Toggleable from "./Togglable"
 
 const Blog = ({ blogs, user }) => {
   const [view, setView] = useState(false)
-  const [id, setId] = useState('null')
+  const [selectedUserDetails, setSelectedUserDetails] = useState('')
 
   const blogStyle = {
     paddingTop: 10,
@@ -12,38 +13,35 @@ const Blog = ({ blogs, user }) => {
     marginBottom: 5
   }
 
-  // const hideDetails = { display : view ? 'none' : '' }
-  const showDetails = { display : view ? '' : 'none' } 
-  
-  const handleClick = (b) => {
+  const handleShowClick = (e) => {
     setView(!view)
-    setId(b.id)
+    setSelectedUserDetails(e)
   }
-
+  const handleHideBtn = (e) => {
+    setView(!view)
+    setSelectedUserDetails('')
+  }
   return (
     <div>
       {
         blogs.map(blog => 
-          
           <div style={blogStyle} key={blog.id}>
-            <div> 
-              {blog.title} {blog.author}
-              <button  onClick={() => handleClick(blog)}>view</button>
-                <button onClick={() => setView(!view)}>hide</button>
-
-              {
-                blog.id === id ?
-              <div style={showDetails}>
-                {blog.url} <br></br>
-                {blog.likes} <br></br>
-                {user.name}
-              </div> : null
-            }
+            <div>
+              { blog.id === selectedUserDetails.id ? 
+                <div>
+                  {blog.title} {blog.author}
+                  <button onClick={handleHideBtn}>hide</button><br></br>
+                  {selectedUserDetails.url}<br></br>
+                  {selectedUserDetails.likes}<br></br> 
+                  {user.name} 
+                </div>
+              : <div>
+                  {blog.title} {blog.author}
+                  <button onClick={() => handleShowClick(blog)}>view</button>
+                </div>
+              }
             </div>
-            
-
           </div>
-          
       )}
     </div>
   )
