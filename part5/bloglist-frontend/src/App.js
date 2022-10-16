@@ -93,6 +93,7 @@ function App() {
             <Blog 
               blog={blog} 
               user={user} 
+              updateBlog={handleUpdateBlog}
               key={blog.id}
               />
             )
@@ -100,14 +101,14 @@ function App() {
       </div>
   )}
 
-  
-
   const logout = () => {
     window.localStorage.clear()
     window.location.reload()
   }
   
-  
+  const handleUpdateBlog = async(id, updatedObj) => {
+    const req = await blogServices.update(id, updatedObj)
+  }
 
   return (
     <div>
