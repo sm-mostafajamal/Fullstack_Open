@@ -77,7 +77,8 @@ function App() {
     setTimeout(() => setAddedMsg(null), 5000)
     
   }
-
+  blogs.sort((a,b) => Number(b.likes) - Number(a.likes))
+  
   const loggedInPage = () => {
     return (
       <div>
@@ -107,7 +108,7 @@ function App() {
   }
   
   const handleUpdateBlog = async(id, updatedObj) => {
-    const req = await blogServices.update(id, updatedObj)
+    return await blogServices.update(id, updatedObj)
   }
 
   return (
