@@ -13,19 +13,24 @@ router.get('/', async (request, response) => {
 })
 
 router.post('/', async (request, response) => {
-  if (!request.user) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+  try {
+    if (!request.user) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+  
+    const user = request.user
+    const blog = new Blog({ ...request.body, user: user.id ,likes: 0})
+  
+    const savedBlog = await blog.save()
+  
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+  
+    response.status(201).json(savedBlog)
+  } catch (error) {
+    console.error(error)
   }
 
-  const user = request.user
-  const blog = new Blog({ ...request.body, user: user.id ,likes: 0})
-
-  const savedBlog = await blog.save()
-
-  user.blogs = user.blogs.concat(savedBlog._id)
-  await user.save()
-
-  response.status(201).json(savedBlog)
 })
 
 router.delete('/:id', async (request, response) => {
@@ -40,9 +45,9 @@ router.delete('/:id', async (request, response) => {
     })
   }
 
-  await Blog.findByIdAndRemove(request.params.id)
+  const deletedBlog = await Blog.findByIdAndRemove(request.params.id)
 
-  response.status(204).end()
+  response.json(deletedBlog).status(204).end()
 })
 
 router.put('/:id', async (request, response) => {

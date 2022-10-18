@@ -95,6 +95,7 @@ function App() {
               blog={blog} 
               user={user} 
               updateBlog={handleUpdateBlog}
+              deleteBlog={handleDeleteBlog}
               key={blog.id}
               />
             )
@@ -110,7 +111,11 @@ function App() {
   const handleUpdateBlog = async(id, updatedObj) => {
     return await blogServices.update(id, updatedObj)
   }
-
+  const handleDeleteBlog = async(id) => {
+    const req = await blogServices.deleteBlog(id)
+    const updatedBlog = blogs.filter(b => b.id !== req.id)
+    setBlogs(updatedBlog)
+  }
   return (
     <div>
         {user === null 
