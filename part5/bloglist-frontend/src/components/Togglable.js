@@ -1,11 +1,10 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
-import PropTypes from 'prop-types';
+import { useState, forwardRef, useImperativeHandle } from "react"
+import PropTypes from 'prop-types'
 
 const Toggleable = forwardRef((props, ref) => {
-  const [createBlogVisible, setCreateBlogVisible] = useState(false);
-
-  const hideCreateBlog = { display: createBlogVisible ? 'none' : ''}
-  const showCreateBlog = { display: createBlogVisible ? '' : 'none'}
+  const [ createBlogVisible, setCreateBlogVisible ]  = useState(false)
+  const hideCreateBlog = { display: createBlogVisible ? 'none' : '' }
+  const showCreateBlog = { display: createBlogVisible ? '' : 'none' }
   const visibleCreateBlog = () => setCreateBlogVisible(!createBlogVisible)
 
   useImperativeHandle(ref, () => {

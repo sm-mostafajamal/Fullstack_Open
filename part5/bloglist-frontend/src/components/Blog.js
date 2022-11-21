@@ -21,34 +21,33 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       url: blog.url
     })
   }
-  
+
   const handleRemove = () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) deleteBlog(blog.id)
   }
   return (
-      <div style={blogStyle} key={blog.id}>
-        <div>
-          {blog.title} {blog.author}
-          <button onClick={() => setView(!view)}>{view ? 'hide' : "view" }</button><br></br>
-          { view && (
-            <div >
-              {blog.title} {blog.author}
-              {blog.url}<br></br>
-              <div>
-                likes {likes}
-                <button onClick={handleLikes}>like</button> 
-              </div>
-              <div>
-                {user.name}
-              </div>
-              <button 
-                style={{backgroundColor : '#87CEEB', borderRadius: '8px'}} 
-                onClick={handleRemove}> remove </button> 
-            </div>)
-          }
-        </div>
+    <div style={blogStyle} key={blog.id}>
+      <div>
+        {blog.title} {blog.author}
+        <button onClick={() => setView(!view)}>{view ? 'hide' : "view" }</button><br></br>
+        { view && (
+          <div >
+            {blog.title} {blog.author}
+            {blog.url}<br></br>
+            <div>
+              likes {likes}
+              <button onClick={handleLikes}>like</button>
+            </div>
+            <div>
+              {user.name}
+            </div>
+            <button
+              style={{ backgroundColor : '#87CEEB', borderRadius: '8px' }}
+              onClick={handleRemove}> remove </button>
+          </div>)
+        }
       </div>
-      
+    </div>
   )
 }
 
