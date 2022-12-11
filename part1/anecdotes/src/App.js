@@ -1,51 +1,38 @@
-import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { anecdote } from './reducers/anecdoteReducer'
 
-//  Button Component
-const Button = ({onClick,text}) => <button onClick={onClick}>{text}</button>
-
-const Anecdote = ({heading, quote, displayPoints}) => {
-  return <div>
-    <h1>{heading}</h1>
-    <div>{quote}</div>
-    <div>has {displayPoints} votes</div>
-  </div>
-}
-
-// App Component
 const App = () => {
-  const anecdotes = [
-    'If it hurts, do it more often.',
-    'Adding manpower to a late software project makes it later!',
-    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-    'Premature optimization is the root of all evil.',
-    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
-    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
-  ]
-
   
-  const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
+  const anecdotes = useSelector(state => state)
+  const dispatch = useDispatch()
   
-  const maxVal = (arr) =>{
-    let max = arr[0]
-    arr.filter(el => el > max ? max = el : max )
-    return max
+  const vote = (id) => {
+    console.log('vote', id)
+    dispatch(anecdote(id))
   }
-  const handleClick = () => setSelected(Math.floor(Math.random()*anecdotes.length))
-  const updatePoints = [...points]
-  updatePoints[selected] +=1
-  const maxVoteNum =maxVal(points)
-  const quote = anecdotes[points.indexOf(maxVoteNum)]
   
-
-
   return (
       <div>
-        <Anecdote heading='Anecdote of the day' quote={anecdotes[selected]} displayPoints={points[selected]} />
-        <Button onClick={() => setPoints(updatePoints)} text='vote' />
-        <Button onClick={handleClick} text='next anecdote' />
-        <Anecdote heading='Anecdote with most votes' quote={quote} displayPoints={`${maxVoteNum}`} />
+        <h2>Anecdotes</h2>
+        {
+          anecdotes.map(anecdote => 
+          <div key={anecdote.id}>
+            <div>
+              {anecdote.content}
+            </div>
+            <div>
+              has {anecdote.votes}
+              <button onClick={() => vote(anecdote.id)}>vote</button>
+            </div>
+          </div>
+        )}
+        <h2>create new</h2>
+        <form>
+          <div>
+            <input />
+            <button>create</button>
+          </div>
+        </form>
       </div>
     )
 }
