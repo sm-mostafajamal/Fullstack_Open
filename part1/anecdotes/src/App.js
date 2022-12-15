@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { anecdote } from './reducers/anecdoteReducer'
-import { newAnecdote } from './reducers/anecdoteReducer'
+import { anecdote, newAnecdote } from './reducers/anecdoteReducer'
+
 
 
 const App = () => {
@@ -19,12 +19,16 @@ const App = () => {
     e.target.anecdote.value = ''
     dispatch(newAnecdote(content))
   }
+
+  anecdotes.sort((a, b) => b.votes-a.votes)
+
   
   return (
       <div>
         <h2>Anecdotes</h2>
         {
           anecdotes.map(anecdote => 
+          
           <div key={anecdote.id}>
             <div>
               {anecdote.content}
