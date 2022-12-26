@@ -21,21 +21,27 @@ const asObject = (anecdote) => {
 }
 const initialState = anecdotesInitialState.map(asObject)
 
+
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState,
   reducers: {
     newAnecdote (state, action) {
-      state.concat(action.data)
+      const content = action.payload
+      return state.concat({
+        content,
+        id: generateId(),
+        votes: 0
+      })
+      // state.concat(action.payload)
     },
     updateVote (state, action) {
-      console.log(state)
-      // const anecdotesToChange = state.find(a => a.id === action.data.id)
-      // const changedAnecdote = {
-      //   ...anecdotesToChange,
-      //   votes: anecdotesToChange.votes + 1
-      // }
-      // return state.map(a => a.id !== changedAnecdote.id ? a : changedAnecdote)
+      const anecdotesToChange = state.find(a => a.id === action.payload)
+      const changedAnecdote = {
+        ...anecdotesToChange,
+        votes: anecdotesToChange.votes + 1
+      }
+      return state.map(a => a.id !== changedAnecdote.id ? a : changedAnecdote)
     }
   }
 })
