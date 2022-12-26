@@ -11,16 +11,15 @@ const AnecdoteList = () => {
   const vote = (id) => {
     dispatch(updateVote(id))
   }
-
-  // anecdotes.sort((a, b) => b.votes-a.votes)
-
+  
+  // const anecdoteCopy = anecdotes.slice()
+  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes-a.votes)
 
 
   return (
     <div>
       {
-        anecdotes.map(anecdote => 
-        
+        sortedAnecdotes.map(anecdote => 
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -30,7 +29,6 @@ const AnecdoteList = () => {
             <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
-
       )}
     </div>
   )

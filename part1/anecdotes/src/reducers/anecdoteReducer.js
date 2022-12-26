@@ -33,7 +33,6 @@ const anecdoteSlice = createSlice({
         id: generateId(),
         votes: 0
       })
-      // state.concat(action.payload)
     },
     updateVote (state, action) {
       const anecdotesToChange = state.find(a => a.id === action.payload)
