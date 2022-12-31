@@ -5,7 +5,18 @@ import { notiVote } from '../reducers/notificationReducer'
 const AnecdoteList = () => {
 
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdotes)
+  
+  const anecdotes = useSelector(state => {
+    if(state.filter === 'All') {
+      return state.anecdotes
+    }
+
+    return [...state.anecdotes].filter(a => { 
+      const anecs = a.content.toLowerCase()
+      return anecs.indexOf(state.filter) > -1
+    })
+    
+  })
   
   const vote = (id) => {
     dispatch(updateVote(id))

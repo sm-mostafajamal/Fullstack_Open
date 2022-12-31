@@ -5,13 +5,12 @@ const Notification = () => {
 
   const dispatch = useDispatch()
   const notification = useSelector(state => state.notification)
-  setTimeout(() => dispatch(hide()), 5000)
-  
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
-  }
+
+  const style = notification === null ? {display : 'none'} : { border: 'solid', padding: 10, borderWidth: 1 } 
+
+  setTimeout(() => {
+    dispatch(hide())    
+  }, 5000)
 
   return (
     <div style={style}>

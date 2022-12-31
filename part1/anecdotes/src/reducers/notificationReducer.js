@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState as anecdotes } from "./anecdoteReducer";
 
-
-
 const notificationSlice = createSlice({
   name: 'notifications',
   initialState: null,
@@ -16,7 +14,7 @@ const notificationSlice = createSlice({
       return `you added '${action.payload}'`
     },
     hide(state, action) {
-      return ''
+      return null
     }
   }
 })

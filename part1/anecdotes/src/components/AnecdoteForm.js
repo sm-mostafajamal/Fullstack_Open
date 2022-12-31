@@ -12,6 +12,7 @@ const AnecdotesForm = () => {
     dispatch(newAnecdote(content))
     dispatch(notiNewAnec(content))
   }
+  
   return <form onSubmit={addAnecdote}>
           <h2>create new</h2>
           <div>
