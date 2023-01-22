@@ -11,16 +11,16 @@ const AnecdoteList = () => {
       return anecdotes
     }
 
-    return [...anecdotes].filter(a => { 
+    return [...anecdotes].filter(a => {
       const anecs = a.content.toLowerCase()
       return anecs.indexOf(filter) > -1
     })
     
   })
   
-  const vote = (id) => {
+  const vote = (id, content) => {
     dispatch(updateVote(id))
-    dispatch(notiVote(id))
+    dispatch(notiVote(content))
   }
 
 
@@ -35,7 +35,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
           </div>
         </div>
       )}

@@ -1,26 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 
-const anecdotesInitialState = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
+// const anecdotesInitialState = [
+//   'If it hurts, do it more often',
+//   'Adding manpower to a late software project makes it later!',
+//   'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+//   'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+//   'Premature optimization is the root of all evil.',
+//   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
+// ]
 
-const generateId = () => (100000 * Math.random()).toFixed(0)
+// const generateId = () => (100000 * Math.random()).toFixed(0)
 
 
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: generateId(),
-    votes: 0
-  }
-}
-export const initialState = anecdotesInitialState.map(asObject)
+// const asObject = (anecdote) => {
+//   return {
+//     content: anecdote,
+//     id: generateId(),
+//     votes: 0
+//   }
+// }
+// export const initialState = anecdotesInitialState.map(asObject)
 
 
 const anecdoteSlice = createSlice({
@@ -28,12 +28,7 @@ const anecdoteSlice = createSlice({
   initialState: [],
   reducers: {
     newAnecdote (state, action) {
-      const content = action.payload
-      return state.concat({
-        content,
-        id: generateId(),
-        votes: 0
-      })
+      return state.concat(action.payload)
     },
     updateVote (state, action) {
       const anecdotesToChange = state.find(a => a.id === action.payload)
@@ -45,7 +40,7 @@ const anecdoteSlice = createSlice({
       return [...anecdotes].sort((a, b) => b.votes-a.votes)
     },
     appendAnecdote (state, action) {
-      return state.push(action.payload)
+      state.push(action.payload)
     },
     setAnecdote (state, action) {
       return action.payload

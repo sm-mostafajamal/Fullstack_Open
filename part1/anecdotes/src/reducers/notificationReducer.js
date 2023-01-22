@@ -1,17 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialState as anecdotes } from "./anecdoteReducer";
 
 const notificationSlice = createSlice({
   name: 'notifications',
   initialState: null,
   reducers: {
     notiVote(state, action) {
-      const anecdote = anecdotes.find(a => a.id === action.payload)
-
-      return `you voted '${anecdote.content}'`
+      return `you voted '${action.payload}'`
     },
     notiNewAnec(state, action) {
-      return `you added '${action.payload}'`
+      const anecdote = action.payload
+      return `you added '${anecdote.content}'`
     },
     hide(state, action) {
       return null
