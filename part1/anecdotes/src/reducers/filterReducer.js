@@ -5,8 +5,7 @@ const filterSlice = createSlice({
   initialState : 'All',
   reducers: {
     searcheValue(state, action) {
-      const value = action.payload
-      return value.toLowerCase()
+      return action.payload.toLowerCase()
     }
   }
 })

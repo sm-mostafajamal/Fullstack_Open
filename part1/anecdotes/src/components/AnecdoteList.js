@@ -6,14 +6,14 @@ const AnecdoteList = () => {
 
   const dispatch = useDispatch()
   
-  const anecdotes = useSelector(state => {
-    if(state.filter === 'All') {
-      return state.anecdotes
+  const anecdotes = useSelector(({ anecdotes, notification, filter }) => {
+    if(filter === 'All') {
+      return anecdotes
     }
 
-    return [...state.anecdotes].filter(a => { 
+    return [...anecdotes].filter(a => { 
       const anecs = a.content.toLowerCase()
-      return anecs.indexOf(state.filter) > -1
+      return anecs.indexOf(filter) > -1
     })
     
   })
