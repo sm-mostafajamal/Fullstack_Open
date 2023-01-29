@@ -23,21 +23,12 @@ import anecService from '../services/anecdotes'
 // }
 // export const initialState = anecdotesInitialState.map(asObject)
 
-export const initializeAnecdotes = () => {
-  return async dispatch => {
-    anecService.getAll().then(anecdotes => {
-      dispatch(setAnecdote(anecdotes))
-    })
-  }
-}
+
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState: [],
   reducers: {
-    newAnecdote (state, action) {
-      return state.concat(action.payload)
-    },
     updateVote (state, action) {
       const anecdotesToChange = state.find(a => a.id === action.payload)
       const changedAnecdote = {
@@ -57,8 +48,23 @@ const anecdoteSlice = createSlice({
 })
 
 
+export const { updateVote, appendAnecdote, setAnecdote} =anecdoteSlice.actions
 
-export const { newAnecdote, updateVote, appendAnecdote, setAnecdote} =anecdoteSlice.actions
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    anecService.getAll().then(anecdotes => {
+      dispatch(setAnecdote(anecdotes))
+    })
+  }
+}
+
+export const createAnecdote = (content) => {
+  return async dispatch => {
+    const newAnecdote = await anecService.createNew(content)
+    dispatch(appendAnecdote(newAnecdote))
+  }
+}
+
 export default anecdoteSlice.reducer
 
 

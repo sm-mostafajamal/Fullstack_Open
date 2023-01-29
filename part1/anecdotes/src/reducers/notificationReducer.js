@@ -8,8 +8,7 @@ const notificationSlice = createSlice({
       return `you voted '${action.payload}'`
     },
     notiNewAnec(state, action) {
-      const anecdote = action.payload
-      return `you added '${anecdote.content}'`
+      return `you added '${action.payload}'`
     },
     hide(state, action) {
       return null
