@@ -8,19 +8,21 @@ const AnecdoteList = () => {
   
   const anecdotes = useSelector(({ anecdotes, notification, filter }) => {
     if(filter === 'All') {
-      return anecdotes
+      return [...anecdotes].sort((a, b) => b.votes-a.votes)
+      
     }
 
     return [...anecdotes].filter(a => {
       const anecs = a.content.toLowerCase()
-      return anecs.indexOf(filter) > -1
+      return anecs.indexOf(filter) > -1 //this filter value is from useSelector parameter
     })
     
   })
-  
-  const vote = (id, content) => {
-    dispatch(updateVote(id))
-    dispatch(notiVote(content))
+  const vote = (content) => {
+    
+    dispatch(updateVote(content))
+    dispatch(notiVote(content.content))
+ 
   }
 
 
@@ -35,7 +37,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       )}
