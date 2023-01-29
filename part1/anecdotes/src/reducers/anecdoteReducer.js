@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import anecService from '../services/anecdotes'
 
 
 // const anecdotesInitialState = [
@@ -22,6 +23,13 @@ import { createSlice } from '@reduxjs/toolkit'
 // }
 // export const initialState = anecdotesInitialState.map(asObject)
 
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    anecService.getAll().then(anecdotes => {
+      dispatch(setAnecdote(anecdotes))
+    })
+  }
+}
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
