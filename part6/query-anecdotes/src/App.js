@@ -40,7 +40,8 @@ const App = () => {
       <Notification />
       <AnecdoteForm />
     
-      { data.map(anecdote =>
+      { 
+        data.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
