@@ -1,4 +1,9 @@
+import { useState, useDispatch } from '../AnecdoteContext'
+
 const Notification = () => {
+  const state = useState()
+  const dispatch = useDispatch()
+ 
   const style = {
     border: 'solid',
     padding: 10,
@@ -6,11 +11,10 @@ const Notification = () => {
     marginBottom: 5
   }
   
-  if (true) return null
-
+  setTimeout(() => dispatch({ type: 'clear' }), 5000)
   return (
-    <div style={style}>
-      
+    <div style={state ? style : {display: 'none'}}>
+      {state}
     </div>
   )
 }

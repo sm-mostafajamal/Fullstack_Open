@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "react-query"
 import { create } from "../Server/services"
-
+import { useDispatch } from "../AnecdoteContext"
 const AnecdoteForm = () => {
   const newAnceMutation = useMutation(create)
   const queryClient = useQueryClient()
+  const dispatch = useDispatch()
 
   const onCreate = (event) => {
     event.preventDefault()
@@ -14,9 +15,10 @@ const AnecdoteForm = () => {
     //   queryClient.invalidateQueries('anecdotes')
     // }
         onSuccess : (newAnec) => {
-        const anecdotes =queryClient.getQueryData('anecdotes')
-        return queryClient.setQueryData('anecdotes', anecdotes.concat(newAnec))
-      }
+          dispatch({type: 'created', newAnec})
+          const anecdotes =queryClient.getQueryData('anecdotes')
+          return queryClient.setQueryData('anecdotes', anecdotes.concat(newAnec))
+        }
     })
 }
 
