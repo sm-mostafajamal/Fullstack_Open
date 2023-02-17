@@ -5,21 +5,26 @@ const AnecdoteForm = () => {
   const newAnceMutation = useMutation(create)
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
-
+  
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
+    if(content.length < 5) return dispatch({type: 'error'})
     newAnceMutation.mutate({content, votes: 0},{
     // onSuccess: () => {
     //   queryClient.invalidateQueries('anecdotes')
     // }
-        onSuccess : (newAnec) => {
-          dispatch({type: 'created', newAnec})
-          const anecdotes =queryClient.getQueryData('anecdotes')
-          return queryClient.setQueryData('anecdotes', anecdotes.concat(newAnec))
-        }
+      
+      onSuccess : (newAnec) => {
+        dispatch({type: 'created', newAnec})
+        const anecdotes = queryClient.getQueryData('anecdotes')
+        return queryClient.setQueryData('anecdotes', anecdotes.concat(newAnec))
+      },
+      onError: (err) => console.log(err)
+      
     })
+    
 }
 
   return (

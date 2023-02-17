@@ -7,6 +7,8 @@ const anecdoteReducer = (state, action) => {
       return state = `anecdote '${action.data.content}' voted`
     case 'created':
       return state = `anecdote '${action.newAnec.content}' created`
+    case 'error':
+      return state = `too short anecdote, must have length 5 or more`
     case 'clear':
       return state = null
     default: 
